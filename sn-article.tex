@@ -18,6 +18,14 @@
   \begingroup\color{gray}\textit{Draft target: #1}\endgroup
   \par\smallskip}
 
+\newcommand{\figureplaceholder}[2][0.20\textheight]{%
+  \fbox{%
+    \begin{minipage}[c][#1][c]{0.94\textwidth}
+      \centering
+      \color{gray}\textbf{Figure placeholder}\par\medskip
+      \normalfont #2
+    \end{minipage}}}
+
 \begin{document}
 
 % Working title. Revise after the central Results are stable.
@@ -39,11 +47,194 @@
 
 \section{Introduction}\label{sec:introduction}
 
-\draftplaceholder{Define the scientific problem, identify the unresolved gap, introduce the central hypothesis, and summarize the contribution.}
+\draftplaceholder{Paragraph 1: Introduce partner-agnostic protein--protein
+interaction-site prediction for membrane proteins. Explain the value of identifying
+contact-prone residues when the bound complex and partner identity are unavailable.
+Keep the opening biological and task oriented; reserve the exact geometric label
+contract for Results and Methods.}
 
+\draftplaceholder{Paragraph 2: Synthesize the limitations of existing PPIS predictors
+and evaluations. Distinguish differences in model inputs from differences in label
+semantics, including selected-partner versus all-partner annotations, structural
+assembly, distance cutoff and residue mapping. Motivate strict sequence-level
+separation without presenting a method-by-method catalogue.}
+
+\draftplaceholder{Paragraph 3: State the central hypothesis that protein language-model
+representations and predicted single-chain structural descriptors provide complementary
+information for membrane-protein contact-site prediction. Introduce TMINTER3 at a high
+level: ESM-C representations, ESMFold-derived residue descriptors, local sequence
+modelling and an optional sequence-derived contact prior. Do not imply that every
+component has a statistically resolved contribution.}
+
+\draftplaceholder{Paragraph 4: Summarize the study design and contributions in evidence
+order: an all-partner heavy-atom contact task with strict SI30 separation; comparison
+under a common output-label evaluation; matched five-seed ablations; external analysis
+of domain and label-contract effects; and FunFam analysis of recurrent interface
+positions versus generic conservation. Avoid claims of prospective validation or
+unqualified state of the art.}
+
+\FloatBarrier
 \section{Results}\label{sec:results}
 
-\draftplaceholder{Present the main findings in scientific order. Add Results subsections only after the figure sequence and argument are agreed.}
+\subsection{Task definition, dataset construction and the TMINTER3 framework}
+\label{sec:results-framework}
+
+\draftplaceholder{Paragraph 1: Define one chain in one experimentally observed
+structural context as the prediction unit. A residue is contact positive when the
+minimum distance between any of its heavy atoms and any heavy atom in another protein
+chain is strictly less than 5.5~\AA. Contacts are unioned across all protein partners;
+water, ions, nucleic acids, glycans and non-protein ligands do not define the label.
+Clarify that the model receives neither the bound complex nor partner identity.}
+
+\draftplaceholder{Paragraph 2: Describe the frozen dataset at the level needed to
+interpret the Results: 20,240 chain contexts, 6,667 exact sequences, 5,850 complexes
+and 338 supplied SI30 components. Explain why repeated exact sequences may be retained
+as distinct structural contexts, while PDB entries, exact-sequence groups and SI30
+components remain indivisible across train, validation and test partitions.}
+
+\draftplaceholder{Paragraph 3: Introduce the TMINTER3 inference path in Figure~1.
+Summarize the ESM-C multi-layer representation, ESMFold-derived 90-dimensional
+single-chain structural descriptors, temporal sequence blocks, the frozen ESM2 contact
+prior, residue classifier and chain-level mean probability. Keep optimization and
+feature inventories in Methods.}
+
+\begin{figure*}[t]
+  \centering
+  \figureplaceholder[0.27\textheight]{%
+    \textbf{a}, Partner-agnostic single-chain prediction task.\quad
+    \textbf{b}, Strict $<5.5$~\AA{} all-partner heavy-atom label.\quad
+    \textbf{c}, Dataset construction and SI30 component split.\quad
+    \textbf{d}, TMINTER3 inputs, prediction trunk and residue/chain outputs.}
+  \caption{Problem definition, dataset construction and the TMINTER3 framework.}
+  \label{fig:framework}
+\end{figure*}
+\FloatBarrier
+
+\subsection{TMINTER3 improves membrane-protein contact-site prediction}
+\label{sec:results-benchmark}
+
+\draftplaceholder{Paragraph 1: Establish pooled AUPRC as the primary ranking metric
+and chain-macro AP as the complementary chain-balanced view. Report the frozen
+five-seed ensemble on the held-out SI30 development benchmark with SI30-component
+bootstrap confidence intervals. Do not describe this repeatedly inspected test set as
+a pristine prospective or fully independent holdout.}
+
+\draftplaceholder{Paragraph 2: Compare TMINTER3 with the principal sequence- and
+structure-based methods under the common output-label evaluation. Report method status
+and evaluable coverage, and use the bounded claim that TMINTER3 achieved the highest
+observed AUPRC among the evaluated methods. Do not present heterogeneous training
+labels, feature sources and model access conditions as a causal architecture test.}
+
+\draftplaceholder{Paragraph 3: Complement global ranking with experimentally relevant
+fixed-budget precision at Top-$L$/20, Top-$L$/10 and Top-$L$/5. Then report estimation
+of the chain-level contact fraction from the mean residue probability as a derived
+output, not as a separate primary task.}
+
+\begin{figure*}[p]
+  \centering
+  \figureplaceholder[0.31\textheight]{%
+    \textbf{a}, AUPRC and chain-macro AP for TMINTER3 and a concise set of principal
+    comparators.\quad
+    \textbf{b}, SI30-component bootstrap intervals for the headline metrics.\quad
+    \textbf{c}, Chain-macro Top-$L$ precision.\quad
+    \textbf{d}, Predicted versus observed chain-level contact fraction.\par\medskip
+    Exclude test-oracle thresholds; display method status and coverage directly.}
+  \caption{Performance of TMINTER3 on the held-out SI30 development benchmark.}
+  \label{fig:benchmark}
+\end{figure*}
+\FloatBarrier
+
+\subsection{Predicted single-chain structural descriptors provide the principal gain}
+\label{sec:results-ablation}
+
+\draftplaceholder{Paragraph 1: Motivate a matched ablation rather than interpreting
+historical model progression. State that all variants use the same split, seeds 46--50,
+optimizer and loss, equal-five logit averaging and validation-selected operating
+thresholds.}
+
+\draftplaceholder{Paragraph 2: Report paired SI30-component contrasts. Removing the
+ESMFold-derived 90D channel produces the dominant resolved reduction in chain-macro AP;
+removing the TCN produces a smaller resolved reduction. The full-minus-no-contact
+interval crosses zero, so the experiment does not establish an additional contribution
+from the frozen ESM2 contact prior. Keep inconsistent ratio-MAE point estimates out of
+the main mechanistic claim.}
+
+\begin{figure*}[t]
+  \centering
+  \figureplaceholder[0.25\textheight]{%
+    \textbf{a}, Pooled AUPRC and chain-macro AP for the five controlled variants.\quad
+    \textbf{b}, Paired component-bootstrap differences in chain-macro AP.\quad
+    \textbf{c}, Secondary threshold-dependent contrast, shown without overriding the
+    ranking-based conclusion.}
+  \caption{Controlled ablation of predicted-structure, temporal-context and
+  sequence-derived contact inputs.}
+  \label{fig:ablation}
+\end{figure*}
+\FloatBarrier
+
+\subsection{External transfer is shaped by domain and contact-label semantics}
+\label{sec:results-external}
+
+\draftplaceholder{Paragraph 1: Introduce evaluation of the frozen ensemble and
+validation-locked threshold across 16 external cohorts. Explain that labels were
+rebuilt under a common structural contract and that mapping coverage is part of the
+reported estimand.}
+
+\draftplaceholder{Paragraph 2: Report heterogeneous transfer rather than one pooled
+external score: strong performance on CompData101 and TestData36, intermediate Dset
+performance, and weaker results on general docking, transient, Spatom and ScanNet
+cohorts. Separate domain shift from exact-sequence overlap sensitivity.}
+
+\draftplaceholder{Paragraph 3: Use DB5.5 as the principal label-contract analysis.
+Show that changing the distance cutoff alone has little effect, whereas changing from
+a selected partner to the union of all protein partners substantially changes AUPRC.
+Conclude that label harmonization explains part, but not all, of the external gap.}
+
+\begin{figure*}[p]
+  \centering
+  \figureplaceholder[0.30\textheight]{%
+    \textbf{a}, External-cohort AUPRC relative to positive prevalence.\quad
+    \textbf{b}, AUROC and evaluable coverage under the common target.\quad
+    \textbf{c}, Paired effect of label-contract harmonization.\quad
+    \textbf{d}, DB5.5 selected-partner, cutoff-only and all-partner comparisons.}
+  \caption{External generalization under harmonized and mismatched contact-label
+  contracts.}
+  \label{fig:external}
+\end{figure*}
+\FloatBarrier
+
+\subsection{TMINTER3 captures family-recurrent interface patterns beyond generic conservation}
+\label{sec:results-funfam}
+
+\draftplaceholder{Paragraph 1: Ask separately whether experimental contact sites are
+conserved and whether frozen TMINTER3 probabilities reproduce family-recurrent
+interface positions. Introduce CATH FunFam domains, informative alignments, Scorecons
+and HMM-state aggregation without implying that CATH information entered training.}
+
+\draftplaceholder{Paragraph 2: Report the modest conservation enrichment of tagged
+sites relative to within-domain exposed background, including the adjusted association
+after accounting for RSA, transmembrane state, secondary structure and amino-acid
+identity. Keep the interpretation observational.}
+
+\draftplaceholder{Paragraph 3: Present the anti-shortcut result. Across paired FunFams,
+TMINTER3 probability correlates substantially more strongly with held-out experimental
+tag recurrence than with generic Scorecons conservation. State that this argues against
+a simple conserved-residue shortcut but does not identify which model channel produces
+the family-level agreement.}
+
+\begin{figure*}[t]
+  \centering
+  \figureplaceholder[0.31\textheight]{%
+    \textbf{a}, Mapping from residues to CATH domains and FunFam HMM states.\quad
+    \textbf{b}, Within-domain contact-site versus exposed-background conservation.\quad
+    \textbf{c}, Correlations of experimental recurrence, TMINTER3 probability and
+    Scorecons across supported HMM states.\quad
+    \textbf{d}, Paired FunFam contrast demonstrating stronger agreement with interface
+    recurrence than with generic conservation.}
+  \caption{Family-level conservation and recurrence analysis of TMINTER3 predictions.}
+  \label{fig:funfam}
+\end{figure*}
+\FloatBarrier
 
 \section{Discussion}\label{sec:discussion}
 
@@ -57,7 +248,12 @@
 
 \section*{Supplementary information}
 
-\draftplaceholder{List the accompanying supplementary files after their contents are finalized.}
+\draftplaceholder{Provide the full baseline table and method-status audit, calibration
+diagnostics, historical model progression, external-cohort mapping and sensitivity
+analyses, complete FunFam robustness analyses, and the exploratory BioLiP
+protein--ligand concordance analysis. DrugBank is not planned as a quantitative cohort;
+retain at most a clearly labelled structural case study if an independently defensible
+case-selection rule is established.}
 
 \section*{Acknowledgements}
 
