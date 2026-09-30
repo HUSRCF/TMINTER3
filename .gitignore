@@ -19,6 +19,8 @@
 /.figures/
 /.papers/
 /figures/svg-inkscape/
+/data/
+/template/
 
 # Editor and operating-system metadata
 .DS_Store
